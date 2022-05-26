@@ -59,8 +59,29 @@
 
 <script>
 
-</script>
+function playSound(e)
+{
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+  if(!audio) return; //To stop the function from running for the keys which doesn't have an audio
+  audio.currentTime = 0; //To revind the sound to 0 such that we can hit multiple of same sound without waiting for it to end.
+  audio.play();
+  key.classList.add('playing');
+}
 
+function removeTransition(e)
+{
+  if(e.propertyName !== 'transform') return //skip if its not a transform cause a lot of transitions are ending at the same time so we are only checking for a single one.
+  console.log(e.propertyName)
+  this.classList.remove('playing');
+}
+
+const keys = document.querySelectorAll('.key');
+keys.forEach(key => key.addEventListener('transitionend',removeTransition));//detect transition ends to make yellow css disappear.
+
+window.addEventListener('keydown',playSound);//detect key press
+
+</script>
 
 </body>
 </html>
